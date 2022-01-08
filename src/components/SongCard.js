@@ -1,7 +1,7 @@
-export const SongCard = ({cover,songName,songDuration,artist}) => {
+export const SongCard = ({cover,songName,songDuration,artist,pos}) => {
     return (
         <div className="bg-[#fff] py-4 pr-2 rounded-lg flex flex-row shadow-card max-w-3xl h-min">
-            <div className="flex justify-center items-center p-2 text-lg font-bold text-neutral">1</div>
+            <div className="flex justify-center items-center p-2 text-lg font-bold text-neutral">{pos}</div>
             <img className="mr-2 rounded-sm" src={cover} alt="test"/>
             <div className="flex flex-col relative w-full">
                 <div className="text-neutral absolute top-0 right-1">{songDuration}</div>
