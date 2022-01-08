@@ -1,6 +1,6 @@
 export const SongCard = ({cover,songName,songDuration,artist,pos}) => {
     return (
-        <div className="bg-[#fff] py-4 pr-2 rounded-lg flex flex-row shadow-card max-w-3xl h-min">
+        <div className="bg-[#fff] py-4 pr-2 rounded-lg flex flex-row shadow-card max-w-3xl h-min scale-100 hover:scale-[1.008] transition-all duration-150">
             <div className="flex justify-center items-center p-2 text-lg font-bold text-neutral">{pos}</div>
             <img className="mr-2 rounded-sm" src={cover} alt="test"/>
             <div className="flex flex-col relative w-full">
