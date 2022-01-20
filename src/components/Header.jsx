@@ -1,6 +1,6 @@
 export const Header = ({title}) => {
     return (
-        <div className="bg-white p-10 sticky top-0 right-0 z-50">
+        <div className="bg-white p-10 w-full z-50 ">
            {/* TODO: Add Search Bar Component */}
            <div className="flex flex-row items-end justify-between">
            <h1 className="text-transparent text-4xl font-black bg-gradient-to-r from-[#5B23E1] to-[#A22FEB] bg-clip-text p-1">{title}</h1>
