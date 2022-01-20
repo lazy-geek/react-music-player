@@ -21,8 +21,8 @@ export const Player = ({ currentSong, audioRef, isPlaying, setIsPlaying }) => {
             </audio>
 
             {isPlaying ?
-                <img src={pauseIcon} alt="pause" onClick={togglePlay} className="w-14" /> :
-                <img src={playIcon} alt="play" onClick={togglePlay} className="w-14" />
+                <img src={pauseIcon} alt="pause" onClick={currentSong.name !=="" ? togglePlay : null} className="w-14" /> :
+                <img src={playIcon} alt="play" onClick={currentSong.name !=="" ? togglePlay : null} className="w-14" />
             }
         </div>
     )
