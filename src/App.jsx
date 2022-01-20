@@ -20,7 +20,7 @@ function App() {
       <Header title="Trending" />
       </div>
       <div className="col-start-2 col-end-3 row-start-2 row-end-3 overflow-y-scroll overflow-x-hidden">
-      <SongList songs={songs} />
+        <SongList songs={songs}/>
       </div>
       <div className="col-start-1 col-end-3 row-start-3 row-end-4 ">
           <Player/>
