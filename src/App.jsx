@@ -17,7 +17,8 @@ function App() {
   const audioRef = useRef(null);
 
   // State
-  const [currentSong, setCurrentSong] = useState(songs[0]);
+  const [currentSong, setCurrentSong] = useState({ name: "", duration: "", artist: "", cover: "", url: "" },
+  );
   const [isPlaying, setIsPlaying] = useState(false);
 
   function handleSongChange(song) {
