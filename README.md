@@ -2,7 +2,10 @@
 react music player for decentralized music library
 
 ## What I Learned
-To Center Items Inside Container Give 100% width To Items Inside Container
+
+### How To Center Items Inside Container Without Losing The Items Width?
+
+Give 100% width To Items Inside Container
 e.g.
 ```css
 .container{
