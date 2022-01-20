@@ -8,10 +8,9 @@ import { Player } from './components/Player';
 
 let songs = [
   { name: "New Year Mix 2022", duration: "02:08", artist: "DrewsThatDude", cover: "https://creatornode3.audius.co/ipfs/QmRz3S1g7u28qrC4JweoXxaocg6VBAhd6RxmXUWYKALo1g/150x150.jpg", url: "https://bafybeif2piaeljpxwaswmvyjwnn7fz6p7lazhcubsnoflif4sy3eunufpa.ipfs.astyanax.io/audio.mpeg" },
-  { name: "New Year Mix 2022", duration: "02:08", artist: "DrewsThatDude", cover: "https://creatornode3.audius.co/ipfs/QmRz3S1g7u28qrC4JweoXxaocg6VBAhd6RxmXUWYKALo1g/150x150.jpg", url: "https://mp3.chillhop.com/serve.php/?mp3=10075" },
-  { name: "New Year Mix 2022", duration: "02:08", artist: "DrewsThatDude", cover: "https://creatornode3.audius.co/ipfs/QmRz3S1g7u28qrC4JweoXxaocg6VBAhd6RxmXUWYKALo1g/150x150.jpg", url: "https://bafybeif2piaeljpxwaswmvyjwnn7fz6p7lazhcubsnoflif4sy3eunufpa.ipfs.astyanax.io/audio.mpeg" },
-  { name: "New Year Mix 2022", duration: "02:08", artist: "DrewsThatDude", cover: "https://creatornode3.audius.co/ipfs/QmRz3S1g7u28qrC4JweoXxaocg6VBAhd6RxmXUWYKALo1g/150x150.jpg", url: "https://bafybeif2piaeljpxwaswmvyjwnn7fz6p7lazhcubsnoflif4sy3eunufpa.ipfs.astyanax.io/audio.mpeg" },
-  { name: "New Year Mix 2022", duration: "02:08", artist: "DrewsThatDude", cover: "https://creatornode3.audius.co/ipfs/QmRz3S1g7u28qrC4JweoXxaocg6VBAhd6RxmXUWYKALo1g/150x150.jpg", url: "https://bafybeif2piaeljpxwaswmvyjwnn7fz6p7lazhcubsnoflif4sy3eunufpa.ipfs.astyanax.io/audio.mpeg" },
+  { name: "Alley Cat Song", duration: "02:08", artist: "DrewsThatDude", cover: "https://creatornode3.audius.co/ipfs/QmRz3S1g7u28qrC4JweoXxaocg6VBAhd6RxmXUWYKALo1g/150x150.jpg", url: "https://bafybeif2piaeljpxwaswmvyjwnn7fz6p7lazhcubsnoflif4sy3eunufpa.ipfs.astyanax.io/audio.mpeg" },
+  { name: "Almost Doesn't Count", duration: "02:08", artist: "DrewsThatDude", cover: "https://creatornode3.audius.co/ipfs/QmRz3S1g7u28qrC4JweoXxaocg6VBAhd6RxmXUWYKALo1g/150x150.jpg", url: "https://bafybeif2piaeljpxwaswmvyjwnn7fz6p7lazhcubsnoflif4sy3eunufpa.ipfs.astyanax.io/audio.mpeg" },
+  { name: "Almost Like Being in Love", duration: "02:08", artist: "DrewsThatDude", cover: "https://creatornode3.audius.co/ipfs/QmRz3S1g7u28qrC4JweoXxaocg6VBAhd6RxmXUWYKALo1g/150x150.jpg", url: "https://bafybeif2piaeljpxwaswmvyjwnn7fz6p7lazhcubsnoflif4sy3eunufpa.ipfs.astyanax.io/audio.mpeg" },
 ]
 function App() {
   // Ref
