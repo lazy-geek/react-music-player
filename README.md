@@ -16,6 +16,12 @@ e.g.
     width: 100%;
 }
 ```
+
+### How To Create Sticky Header And Footer With Css Grid?
+
+Follow This [medium](https://medium.com/@beyondborders/beginner-css-grid-sticky-navigation-scrolling-content-7c4de0a8d1dc) Article.
+
+
 ## todo
 
 - [ ] add path alias using croco refer [stackoverflow](https://stackoverflow.com/questions/63067555/how-to-make-an-import-shortcut-alias-in-create-react-app) 
