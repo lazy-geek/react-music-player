@@ -21,6 +21,11 @@ function App() {
   );
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const [songInfo, setSongInfo] = useState({
+		currentTime: 0,
+		duration: 0,
+	});
+
   function handleSongChange(song) {
     audioRef.current.pause();
     setIsPlaying(false);
@@ -42,7 +47,7 @@ function App() {
         <SongList songs={songs} currentSong={currentSong} handleSongChange={handleSongChange} />
       </div>
       <div className="col-start-1 col-end-3 row-start-3 row-end-4 ">
-        <Player currentSong={currentSong} audioRef={audioRef} isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
+        <Player currentSong={currentSong} audioRef={audioRef} isPlaying={isPlaying} setIsPlaying={setIsPlaying} songInfo={songInfo} setSongInfo={setSongInfo}/>
 
       </div>
     </div>
