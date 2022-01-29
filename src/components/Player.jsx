@@ -35,7 +35,7 @@ export const Player = ({ currentSong, audioRef, isPlaying, setIsPlaying ,songInf
     return (
         <div className="flex flex-col w-full h-full bg-[#FCFCFC] z-50 items-center justify-center">
             <audio ref={audioRef} onTimeUpdate={updateTimeHandler}>
-                <source src={currentSong.url} type="audio/mpeg" />
+                <source src={currentSong.TrackURL} type="audio/mpeg" />
             </audio>
             <div className="flex flex-row w-[60%] justify-between">
             <p>{getTime(songInfo.currentTime)}</p>
@@ -49,8 +49,8 @@ export const Player = ({ currentSong, audioRef, isPlaying, setIsPlaying ,songInf
             <p>{getTime(songInfo.duration)}</p>
             </div>
             {isPlaying ?
-                <img src={pauseIcon} alt="pause" onClick={currentSong.name !=="" ? togglePlay : null} className="w-10" /> :
-                <img src={playIcon} alt="play" onClick={currentSong.name !=="" ? togglePlay : null} className="w-10" />
+                <img src={pauseIcon} alt="pause" onClick={currentSong.TrackTitle !=="" ? togglePlay : null} className="w-10" /> :
+                <img src={playIcon} alt="play" onClick={currentSong.TrackTitle !=="" ? togglePlay : null} className="w-10" />
             }
         </div>
     )
