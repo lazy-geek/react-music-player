@@ -51,7 +51,7 @@ function App() {
   return (
     <div className="bg-custom-grey grid grid-cols-[20%_auto] grid-rows-[auto_auto_10%] h-screen overflow-hidden">
       <div className="col-start-1 col-end-2 row-start-1 row-end-3">
-        <SideBar />
+        <SideBar art={currentSong.ArtWorkURl}/>
       </div>
       <div className="col-start-2 col-end-3 row-start-1 row-end-2">
         <Header title="Trending" />

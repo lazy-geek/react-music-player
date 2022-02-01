@@ -50,6 +50,12 @@ export const SideBar = ({ art }) => {
 
             <div className="flex flex-col border-t-[1px] border-[#e9eaed] items-center">
                 <button className="uppercase my-4 bg-fuchsia-500 text-base font-bold py-1 px-10 text-white  rounded-sm scale-100 hover:scale-110 transition-all duration-150">Sign Up</button>
+                <div className=" bg-custom-grey border-white rounded-xl border-4 w-52 h-52 overflow-hidden">
+                    {art &&
+
+                        <img src={art} alt="song art" />
+                    }
+                </div>
             </div>
         </div>
     )
