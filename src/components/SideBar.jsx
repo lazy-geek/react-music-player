@@ -5,6 +5,18 @@ const Header =() =>{
         </div>
     )
 }
+const UserCard = () => {
+    return (
+        <div className="flex flex-row pl-8 my-4">
+            <div className="bg-fuchsia-500 h-10 w-10 rounded-full mr-4"></div>
+            <div className="flex flex-col">
+                <span className="text-sm font-semibold">Have an Account?</span>
+                <span className="text-xs text-[#7e1bcc]">Sign In</span>
+            </div>
+        </div>
+    )
+}
+
 export const SideBar = () => {
     return (
         <div className="w-full h-full bg-[#FCFCFC] ">
