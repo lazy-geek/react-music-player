@@ -5,6 +5,8 @@ import { Header } from './components/Header';
 import { SideBar } from './components/SideBar';
 import { Player } from './components/Player';
 import { UploadPage } from './components/UploadPage';
+import LoadingOverlay from "react-loading-overlay";
+import { Triangle } from 'react-loader-spinner';
 
 
 
@@ -66,11 +68,11 @@ function App() {
     //   </div>
     // </div>
 
-
-    <div className="flex flex-col bg-custom-grey h-screen max-h-full items-center justify-center">
-      <UploadPage setIsUploading={setIsUploading} />
-    </div>
-
+    <LoadingOverlay active={isUploading} spinner={<Triangle ariaLabel="loading-indicator" />}>
+      <div className="flex flex-col bg-custom-grey h-screen max-h-full items-center justify-center">
+        <UploadPage setIsUploading={setIsUploading} />
+      </div>
+    </LoadingOverlay>
   );
 }
 
