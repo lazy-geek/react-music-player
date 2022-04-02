@@ -1,15 +1,11 @@
 
 import playIcon from "../assets/play.svg"
 import pauseIcon from "../assets/pause.svg"
+import { getTime } from "../helpers";
 
 export const Player = ({ currentSong, audioRef, isPlaying, setIsPlaying ,songInfo,setSongInfo}) => {
 
-    const getTime = (time) => {
-        if (!time) return '00:00';
-		let minute = Math.floor(time / 60);
-		let second = ("0" + Math.floor(time % 60)).slice(-2);
-		return `${minute}:${second}`;
-	};
+    
 
     const updateTimeHandler = (e) => {
 		const currentTime = e.target.currentTime;
