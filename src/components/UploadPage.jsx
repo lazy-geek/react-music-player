@@ -1,9 +1,18 @@
 import React, { useState, useEffect} from 'react';
 import { Web3Storage } from 'web3.storage';
 import { getTime } from '../helpers';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "../styles/myDatePicker.css";
+
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
 
 export const UploadPage = (props) => {
     
+    const Genres = [
+        'Electronic', 'Hip-Hop', 'Disco','Other'
+      ];
     
 
 	
@@ -16,6 +25,8 @@ export const UploadPage = (props) => {
     const [preview, setPreview] = useState();
     const [src, setSrc] = useState("");
     const [duration, setDuration] = useState();
+    const [startDate, setStartDate] = useState(new Date());
+    const [genre, setGenre] = useState("");
     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDU2MTY1MzdmYkYyQTdFODI3YzJkNzc5NzVGMzU1RTg3NTJDMTE5NzEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NDc3MDA0MjI2OTQsIm5hbWUiOiJyZWFjdC1tdXNpYy10ZXN0In0.jNBkj3OArl-n_c5smjsme-p2QgxQbyYGhGrdmzCSbTM";
     const storage = new Web3Storage({ token });
     
@@ -92,7 +103,7 @@ export const UploadPage = (props) => {
     const uploadSongDetails = async (songFile_name,song_cid,coverFile_name,cover_cid) => {
       const song_url = `https://${song_cid}.ipfs.infura-ipfs.io/${songFile_name}`;
       const cover_url = `https://${cover_cid}.ipfs.infura-ipfs.io/${coverFile_name}`;
-      const result = await props.contract.UploadSong(artistName,songName,cover_url,song_url,111,duration,'pop',price,quantity);
+      const result = await props.contract.UploadSong(artistName,songName,cover_url,song_url,startDate.getTime(),duration,'pop',price,quantity);
         console.log(result);
     }
     const getFileExt = (f) => {
@@ -114,7 +125,11 @@ export const UploadPage = (props) => {
             <input type="text" name="songName" id="songName" value={songName} onChange={(e) => setSongName(e.target.value)} placeholder="Song Name" className="bg-white p-2 mb-2 outline-none border-[#dee2e6] border-[1px]" />
             <input type="number" name="price" id="price" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Price" className="bg-white p-2 mb-2 outline-none border-[#dee2e6] border-[1px]" min={0}/>
             <input type="number" name="quantity" id="quantity" value={quantity} onChange={(e) => setQuantity(e.target.value)} placeholder="Quantity" className="bg-white p-2 mb-2 outline-none border-[#dee2e6] border-[1px]" min={1}/>
-
+            <label htmlFor="releaseDate" className="flex flex-row border-[#dee2e6] border-[1px] mb-2 p-2 text-[#7b7f85]">
+                Release Date:
+                <DatePicker id="releaseDate" required className="text-black" selected={startDate} onChange={(date) => setStartDate(date)} />
+            </label>
+            <Dropdown className="mb-2" options={Genres} onChange={e =>setGenre(e.value)} value={genre} placeholder="Select a Genre" />
             <label htmlFor="song" className="cursor-pointer text-[#7b7f85]">
                 <div className="p-2 bg-slate-200 mb-2 ">
                     <div className=" flex border-4 p-2 border-[#9fa4ab] border-dashed bg-transparent box-content justify-center">
