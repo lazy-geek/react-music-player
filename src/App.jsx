@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import './App.css';
 import {ethers} from 'ethers'
+
 import DMI_Contract_abi from './contracts/DMI-Contract_abi.json';
 import { SongList } from './components/SongList';
 import { Header } from './components/Header';
@@ -89,8 +90,10 @@ const fetchSongs = async ()  => {
   let songs=[];
   for(let i=0; i<id; i++){
     let song = await contract.getSongById(i);
+    console.log(song);
     let temp = {
       'id':parseInt(song['_id'].toHexString(),16),
+      'ArtistName':song['ArtistName'],
       'TrackURL': song['ArtURL'],
       "TrackTitle": song['SongName'],
       "ReleaseDate": parseInt(song['TimeStamp'].toHexString(),16),
@@ -101,7 +104,7 @@ const fetchSongs = async ()  => {
     songs[i]=temp;
   }
   setSongList(songs);
-  console.log(songs);
+  // console.log(songs);
 }
 
 useEffect(()=>{
@@ -115,13 +118,14 @@ useEffect(()=>{
   const [isUploading, setIsUploading] = useState(false);
   const [songList, setSongList] = useState([]);
   const [currentSong, setCurrentSong] = useState({
-    "_id": "",
-    "TrackTitle": "",
-    "TrackURL": "",
-    "ReleaseDate": "",
-    "ArtWorkURl": "",
-    "TrackLikes": 0,
-    "TrackDuration": ""
+    'id':'',
+      'ArtistName':'',
+      'TrackURL': '',
+      "TrackTitle": '',
+      "ReleaseDate": '',
+      "ArtWorkURl": '',
+      "TrackLikes": 0,
+      "TrackDuration": ''
   });
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -140,12 +144,12 @@ useEffect(()=>{
   }
 
 
-  useEffect(() => {
-    fetch('https://decentralized-music-library.herokuapp.com/Trending/TrendingList', { method: "GET" })
-      .then((response) => response.json())
-      .then((data) => setSongList(data))
-      .catch((error) => console.log(error.message));
-  }, []);
+  // useEffect(() => {
+  //   fetch('https://decentralized-music-library.herokuapp.com/Trending/TrendingList', { method: "GET" })
+  //     .then((response) => response.json())
+  //     .then((data) => setSongList(data))
+  //     .catch((error) => console.log(error.message));
+  // }, []);
 
   return (
 
@@ -157,7 +161,7 @@ useEffect(()=>{
             <SideBar art={currentSong.ArtWorkURl} connectWalletHandler={connectWalletHandler} connButtonText={connButtonText}/>
           </div>
           <div className="col-start-2 col-end-3 row-start-1 row-end-2">
-            <Header title="Trending" contract={contract} setSongList={setSongList} connectWalletHandler={connectWalletHandler} songList={songList}/>
+            <Header title="Newly Released" contract={contract} setSongList={setSongList} connectWalletHandler={connectWalletHandler} songList={songList}/>
           </div>
           <div className="col-start-2 col-end-3 row-start-2 row-end-3 overflow-y-scroll overflow-x-hidden">
             <SongList songs={songList} currentSong={currentSong} handleSongChange={handleSongChange} />
