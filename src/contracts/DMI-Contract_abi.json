@@ -1,0 +1,503 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "walletAd",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "emails",
+				"type": "string"
+			}
+		],
+		"name": "BuyNFT",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "BuyersAdd",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "email",
+				"type": "string"
+			}
+		],
+		"name": "BuyTrack",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "Creator",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "NFTCount",
+				"type": "uint256"
+			}
+		],
+		"name": "ListingPrice",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "ArtistName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "SongName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "CoverURL",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "ArtURL",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "Length",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "TimeStamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "Owner",
+						"type": "address"
+					}
+				],
+				"indexed": false,
+				"internalType": "struct artistDB.MetaData",
+				"name": "data",
+				"type": "tuple"
+			}
+		],
+		"name": "Test",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "nft",
+				"type": "uint256"
+			}
+		],
+		"name": "showNFTAvaiable",
+		"type": "event"
+	},
+	{
+		"stateMutability": "payable",
+		"type": "fallback"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_Artist",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_SongName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_CoverURL",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_TrackURL",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_ReleaseDate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_TrackLength",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_Genre",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_nftPrice",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_nftCount",
+				"type": "uint256"
+			}
+		],
+		"name": "UploadSong",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"stateMutability": "payable",
+		"type": "receive"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_G",
+				"type": "string"
+			}
+		],
+		"name": "Explore",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "",
+				"type": "string[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_artistName",
+				"type": "string"
+			}
+		],
+		"name": "GetArtistSongList",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "",
+				"type": "string[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getIndividualNFT",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "NFTCount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "TotalCount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "TokenValue",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address[]",
+						"name": "WalletAd",
+						"type": "address[]"
+					},
+					{
+						"internalType": "address",
+						"name": "CreatorsWallet",
+						"type": "address"
+					},
+					{
+						"internalType": "string[]",
+						"name": "mailAddress",
+						"type": "string[]"
+					}
+				],
+				"internalType": "struct BuyAsNFT.NFT",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "GetListOfNFTOwned",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "GetListOfNFTOWned",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getSongById",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "ArtistName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "SongName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "CoverURL",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "ArtURL",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "Length",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "TimeStamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "Owner",
+						"type": "address"
+					}
+				],
+				"internalType": "struct artistDB.MetaData",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address payable",
+				"name": "NFT_Creator",
+				"type": "address"
+			}
+		],
+		"name": "getWallet",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "NewlyRealsed",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_search",
+				"type": "string"
+			}
+		],
+		"name": "SearchSong",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "_id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "ArtistName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "SongName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "CoverURL",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "ArtURL",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "Length",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "TimeStamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "Owner",
+						"type": "address"
+					}
+				],
+				"internalType": "struct artistDB.MetaData",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "user",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
