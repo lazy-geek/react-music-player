@@ -108,7 +108,7 @@ export const UploadPage = (props) => {
     const uploadSongDetails = async (songFile_name,song_cid,coverFile_name,cover_cid) => {
       const song_url = `https://${song_cid}.ipfs.infura-ipfs.io/${songFile_name}`;
       const cover_url = `https://${cover_cid}.ipfs.infura-ipfs.io/${coverFile_name}`;
-      const result = await props.contract.UploadSong(artistName,songName,cover_url,song_url,startDate.getTime(),duration,genre,price,quantity);
+      const result = await props.contract.UploadSong(artistName,songName,cover_url,song_url,startDate.getTime(),duration,genre,parseUnits(price.toString(),'ether'),BigNumber.from(quantity));
       await props.uploadSongToMongoDB(songName);
         console.log(result);
     }
