@@ -4,7 +4,8 @@ import { getTime } from '../helpers';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../styles/myDatePicker.css";
-
+import { BigNumber } from '@ethersproject/bignumber';
+import { parseUnits } from '@ethersproject/units';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 
@@ -108,7 +109,7 @@ export const UploadPage = (props) => {
     const uploadSongDetails = async (songFile_name,song_cid,coverFile_name,cover_cid) => {
       const song_url = `https://${song_cid}.ipfs.infura-ipfs.io/${songFile_name}`;
       const cover_url = `https://${cover_cid}.ipfs.infura-ipfs.io/${coverFile_name}`;
-      const result = await props.contract.UploadSong(artistName,songName,cover_url,song_url,startDate.getTime(),duration,genre,parseUnits(price.toString(),'ether'),BigNumber.from(quantity));
+      const result = await props.contract.UploadSong(artistName,songName,cover_url,song_url,startDate.getTime(),duration,genre,price,quantity);
       await props.uploadSongToMongoDB(songName);
         console.log(result);
     }
