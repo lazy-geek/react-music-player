@@ -218,7 +218,7 @@ function App() {
     let finalPrice = ethers.utils.formatUnits(price);
     console.log("final price:"+finalPrice);
     let options = {value: ethers.utils.parseEther(finalPrice)};
-    await contract.BuyNFT(BigNumber.from(e), defaultAccount, 'abararmalek007@gmail.com',options).then((res)=>{
+    await contract.BuyNFT(BigNumber.from(i), defaultAccount, 'abararmalek007@gmail.com',options).then((res)=>{
       console.log("res data :"+res.data.message);
     });
   }
