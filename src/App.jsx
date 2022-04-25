@@ -24,7 +24,7 @@ const serverUrl = "https://dml-server.herokuapp.com";
 
 function App() {
   // -----------------------------------------------------------------------------------------------------------
-  let contractAddress = '0x098038EFf0265dE3770A9F27a97a6F6FD9552783';
+  let contractAddress = '0xa9570e99469A835DB159EA3192cB1473e06C58b1';
   const [errorMessage, setErrorMessage] = useState(null);
   const [defaultAccount, setDefaultAccount] = useState(null);
   const [jwtToken, setJwtToken] = useState("");
@@ -209,6 +209,18 @@ function App() {
         console.log(res.data);
         setJwtToken(res.data['authToken']);
   }
+  const buySong = async (i) => {
+    if (defaultAccount === null) return;
+    let price  = await contract.getIndividualNFT(i);
+    price = price.TokenValue;
+    console.log("buy price: "+price);
+    let finalPrice = ethers.utils.formatUnits(price);
+    console.log("final price:"+finalPrice);
+    let options = {value: ethers.utils.parseEther(finalPrice)};
+    await contract.BuyNFT(BigNumber.from(e), defaultAccount, 'abararmalek007@gmail.com',options).then((res)=>{
+      console.log("res data :"+res.data.message);
+    });
+  }
   useEffect(() => {
     fetchSongs();
   }, [contract]);
@@ -364,7 +376,7 @@ function App() {
             <Header title={activeTile} contract={contract} setSongList={setSongList} connectWalletHandler={connectWalletHandler} fetchSongs={fetchSongs} fetchSongsByGenre={fetchSongsByGenre} searchSongByName={searchSongByName}/>
           </div>
           <div className="col-start-2 col-end-3 row-start-2 row-end-3 overflow-y-scroll overflow-x-hidden">
-            <SongList songs={songList} currentSong={currentSong} handleSongChange={handleSongChange} playlists={playlists} addSongToPlaylist={addSongToPlaylist} deleteSongFromPlaylist={deleteSongFromPlaylist} ownedSongIds={ownedSongIds} buySong={(e) => contract.BuyNFT(e, defaultAccount, 'abararmalek007@gmail.com')} />
+            <SongList songs={songList} currentSong={currentSong} handleSongChange={handleSongChange} playlists={playlists} addSongToPlaylist={addSongToPlaylist} deleteSongFromPlaylist={deleteSongFromPlaylist} ownedSongIds={ownedSongIds} buySong={(e) => buySong(e)} />
           </div>
           <div className="col-start-1 col-end-3 row-start-3 row-end-4 ">
             <Player currentSong={currentSong} audioRef={audioRef} isPlaying={isPlaying} setIsPlaying={setIsPlaying} songInfo={songInfo} setSongInfo={setSongInfo} />
