@@ -71,7 +71,7 @@ export const SideBar = (props) => {
                     {props.playlists!=null && props.playlists.map(playlist => {
                         return <li key={playlist.id} className="list-none">
                             <button className={" mb-2 text-base uppercase tracking-wider" + activeStyle(playlist.id,"text-secondary","text-black")} onClick={()=>{
-                                props.setActiveTile(playlist.id);
+                                props.setActiveTile(playlist.ListTitle);
                                 props.setSongList(playlist.List)}}>
                             {playlist.ListTitle} 
 
