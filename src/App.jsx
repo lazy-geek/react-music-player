@@ -8,7 +8,8 @@ import {
 import './App.css';
 import axios from 'axios';
 import { ethers } from 'ethers'
-
+import { BigNumber } from '@ethersproject/bignumber';
+import { parseUnits } from '@ethersproject/units';
 import DMI_Contract_abi from './contracts/DMI-Contract_abi.json';
 import { SongList } from './components/SongList';
 import { Header } from './components/Header';
