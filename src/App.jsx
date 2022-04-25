@@ -6,7 +6,8 @@ import {
   Route,
 } from "react-router-dom";
 import './App.css';
-import {ethers} from 'ethers'
+import axios from 'axios';
+import { ethers } from 'ethers'
 
 import DMI_Contract_abi from './contracts/DMI-Contract_abi.json';
 import { SongList } from './components/SongList';
@@ -18,15 +19,19 @@ import LoadingOverlay from "react-loading-overlay";
 import { Triangle } from 'react-loader-spinner';
 
 
+const serverUrl = "https://dml-server.herokuapp.com";
 
 
 function App() {
   // -----------------------------------------------------------------------------------------------------------
-  let contractAddress = '0x152aE2599a1f85FcC9CFb5ed5cC47402004d050C';
+  let contractAddress = '0xe8f2401F82e7301ecF413d8BF7c14B025A20b140';
   const [errorMessage, setErrorMessage] = useState(null);
   const [defaultAccount, setDefaultAccount] = useState(null);
+  const [jwtToken, setJwtToken] = useState("");
+  const [playlists, setPlaylists] = useState(null);
+  const [ownedSongIds, setOwnedSongIds] = useState([]);
   const [connButtonText, setConnButtonText] = useState('Login');
-
+  const [activeTile, setActiveTile] = useState("Newly Released");
   const [currentContractVal, setCurrentContractVal] = useState(null);
 
   const [provider, setProvider] = useState(null);
@@ -42,6 +47,7 @@ function App() {
           console.log(result);
           accountChangedHandler(result[0]);
           setConnButtonText('Connected');
+
         })
         .catch(error => {
           setErrorMessage(error.message);
@@ -82,34 +88,228 @@ function App() {
     let tempContract = new ethers.Contract(contractAddress, DMI_Contract_abi, tempSigner);
     setContract(tempContract);
   }
-// ---------------------------------------------------------------------------------
-const fetchSongs = async ()  => {
-  if (contract === null) return;
-  let id =await contract.NewlyRealsed();
-  id = parseInt(id.toHexString(),16);
-  let songs=[];
-  for(let i=0; i<id; i++){
-    let song = await contract.getSongById(i);
-    console.log(song);
-    let temp = {
-      'id':parseInt(song['_id'].toHexString(),16),
-      'ArtistName':song['ArtistName'],
-      'TrackURL': song['ArtURL'],
-      "TrackTitle": song['SongName'],
-      "ReleaseDate": parseInt(song['TimeStamp'].toHexString(),16),
-      "ArtWorkURl": song['CoverURL'],
-      "TrackLikes": 0,
-      "TrackDuration": song['Length']
+  // ---------------------------------------------------------------------------------
+  const searchSongByName = async (names) => {
+    if (contract === null) return;
+    if(!names || names == "errors") return;
+    if(names.length == 0) return;
+    let songs = [];
+    for (let i = 0; i < names.length; i++) {
+      let song = await contract.SearchSong(names[i]['Track']);
+      let temp = {
+        'id': parseInt(song['_id'].toHexString(), 16),
+        'ArtistName': song['ArtistName'],
+        'TrackURL': song['ArtURL'],
+        "TrackTitle": song['SongName'],
+        "ReleaseDate": parseInt(song['TimeStamp'].toHexString(), 16),
+        "ArtWorkURl": song['CoverURL'],
+        "TrackLikes": 0,
+        "TrackDuration": song['Length']
+      }
+      songs[i] = temp;
     }
-    songs[i]=temp;
-  }
-  setSongList(songs);
-  // console.log(songs);
-}
+    setSongList(songs);
 
-useEffect(()=>{
-  fetchSongs();
-},[contract]);
+  }
+
+  const fetchSongs = async () => {
+    if (contract === null) return;
+    let id = await contract.NewlyRealsed();
+    id = parseInt(id.toHexString(), 16);
+    let songs = [];
+    for (let i = 0; i < id; i++) {
+      let song = await contract.getSongById(i);
+      console.log(song);
+      let temp = {
+        'id': parseInt(song['_id'].toHexString(), 16),
+        'ArtistName': song['ArtistName'],
+        'TrackURL': song['ArtURL'],
+        "TrackTitle": song['SongName'],
+        "ReleaseDate": parseInt(song['TimeStamp'].toHexString(), 16),
+        "ArtWorkURl": song['CoverURL'],
+        "TrackLikes": 0,
+        "TrackDuration": song['Length']
+      }
+      songs[i] = temp;
+    }
+    setSongList(songs);
+    setActiveTile("Newly Released");
+    fetchOwnedSongsIds();
+    // console.log(songs);
+  }
+
+  const fetchSongsByGenre = async (g) => {
+    if (contract === null) return;
+    let names = await contract.Explore(g);
+
+    let songs = [];
+    for (let i = 0; i < names.length; i++) {
+      let song = await contract.SearchSong(names[i]);
+      let temp = {
+        'id': parseInt(song['_id'].toHexString(), 16),
+        'ArtistName': song['ArtistName'],
+        'TrackURL': song['ArtURL'],
+        "TrackTitle": song['SongName'],
+        "ReleaseDate": parseInt(song['TimeStamp'].toHexString(), 16),
+        "ArtWorkURl": song['CoverURL'],
+        "TrackLikes": 0,
+        "TrackDuration": song['Length']
+      }
+      songs[i] = temp;
+    }
+    setSongList(songs);
+    setActiveTile("Newly Released");
+    // console.log(songs);
+  }
+
+  const fetchOwnedSongsIds = async () => {
+    if (contract === null || defaultAccount === null) return;
+    let ids = await contract.GetListOfNFTOwned();
+    let temp=[];
+    if(ids){
+      ids.forEach(element => {
+        temp.push(parseInt(element.toHexString(), 16));
+      });
+    }
+    setOwnedSongIds(temp);
+  }
+
+  const fetchBoughtSongs = async () => {
+    if (contract === null || defaultAccount === null || !ownedSongIds) return;
+    let songs = [];
+    for (let i = 0; i < ownedSongIds.length; i++) {
+      let  id = ownedSongIds[i];
+      let song = await contract.getSongById(id);
+      console.log(song);
+      
+      let temp = {
+        'id': parseInt(song['_id'].toHexString(), 16),
+        'ArtistName': song['ArtistName'],
+        'TrackURL': song['ArtURL'],
+        "TrackTitle": song['SongName'],
+        "ReleaseDate": parseInt(song['TimeStamp'].toHexString(), 16),
+        "ArtWorkURl": song['CoverURL'],
+        "TrackLikes": 0,
+        "TrackDuration": song['Length']
+      }
+      songs[i] = temp;
+    }
+    setSongList(songs);
+    setActiveTile("Bought");
+  }
+  const connectToDML = async () => {
+    if (defaultAccount === null) return;
+    console.log('connecting to server');
+    console.log(defaultAccount);
+    const a = {
+      wallet: defaultAccount,
+    };
+    let res = await axios.post(`${serverUrl}/playlist/connect`, a);
+      
+        console.log(res.data);
+        setJwtToken(res.data['authToken']);
+  }
+  useEffect(() => {
+    fetchSongs();
+  }, [contract]);
+
+  useEffect( () => {
+     connectToDML();
+    
+  }, [defaultAccount]);
+
+  useEffect(() => {
+    getAllPlaylist();
+  },[jwtToken]);
+
+  const addPlaylist = (pname) => {
+    if (jwtToken === "" || defaultAccount === null || pname.trim() == '') return;
+    console.log('adding playlist');
+    // console.log(defaultAccount);
+    const a = {
+      wallet: defaultAccount,
+      playlistTitle: pname
+    };
+    axios.post(`${serverUrl}/playlist/createPlaylist`, a, {
+      headers: {
+        "token": `${jwtToken}`,
+      }
+    }).then(res => {
+      console.log(res);
+      console.log(res.data);
+    });
+    getAllPlaylist();
+  }
+
+  const addSongToPlaylist = (playlistId,song) => {
+    if (jwtToken === "" || defaultAccount === null || !playlistId || !song) return;
+    console.log('adding playlist');
+    // console.log(defaultAccount);
+    const a = {
+      wallet: defaultAccount,
+      PlaylistID: playlistId,
+      Track: song
+    };
+    axios.post(`${serverUrl}/playlist/Add`, a, {
+      headers: {
+        "token": `${jwtToken}`,
+      }
+    }).then(res => {
+      console.log(res);
+      console.log(res.data);
+    });
+  }
+
+  const deleteSongFromPlaylist  = (playlistId,song) => {
+    if (jwtToken === "" || defaultAccount === null || !playlistId || !song) return;
+    console.log(`deleting ${song.id}`);
+    // console.log(defaultAccount);
+    const a = {
+      wallet: defaultAccount,
+      PlaylistID: playlistId,
+      id: song.id
+    };
+    axios.post(`${serverUrl}/playlist/Remove`, a, {
+      headers: {
+        "token": `${jwtToken}`,
+      }
+    }).then(res => {
+      console.log(res);
+      console.log(res.data);
+    });
+  }
+  const getAllPlaylist = () => {
+    if (jwtToken === "" || defaultAccount === null) return;
+    console.log("getAllPlaylist");
+    const a = {
+      wallet: defaultAccount,
+    };
+    axios.post(`${serverUrl}/playlist/fetchPlaylist`,a, {
+      headers: {
+        "token": `${jwtToken}`,
+      }
+    }).then(res => {
+      console.log(res);
+      console.log('playlists: '+res.data);
+      setPlaylists(res.data["Playlists"]);
+    });
+  }
+
+  const uploadSongToMongoDB = (sname) => {
+    if (jwtToken === "" || defaultAccount === null) return;
+    console.log("upload to mongodb");
+    const a = {
+      wallet: defaultAccount,
+      track: sname
+    };
+    axios.post(`${serverUrl}/playlist/AddSearch`,a, {
+      headers: {
+        "token": `${jwtToken}`,
+      }
+    }).then(res => {
+      console.log('uploaded to mongo:' + res);
+    });
+  }
   // ---------------------------------------------------------------------------------
   // Ref
   const audioRef = useRef(null);
@@ -118,14 +318,14 @@ useEffect(()=>{
   const [isUploading, setIsUploading] = useState(false);
   const [songList, setSongList] = useState([]);
   const [currentSong, setCurrentSong] = useState({
-    'id':'',
-      'ArtistName':'',
-      'TrackURL': '',
-      "TrackTitle": '',
-      "ReleaseDate": '',
-      "ArtWorkURl": '',
-      "TrackLikes": 0,
-      "TrackDuration": ''
+    'id': '',
+    'ArtistName': '',
+    'TrackURL': '',
+    "TrackTitle": '',
+    "ReleaseDate": '',
+    "ArtWorkURl": '',
+    "TrackLikes": 0,
+    "TrackDuration": ''
   });
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -158,13 +358,13 @@ useEffect(()=>{
       <Route path="/" element={
         <div className="bg-custom-grey grid grid-cols-[20%_auto] grid-rows-[auto_auto_10%] h-screen overflow-hidden">
           <div className="col-start-1 col-end-2 row-start-1 row-end-3">
-            <SideBar art={currentSong.ArtWorkURl} connectWalletHandler={connectWalletHandler} connButtonText={connButtonText}/>
+            <SideBar art={currentSong.ArtWorkURl} connectWalletHandler={connectWalletHandler} connButtonText={connButtonText} addPlaylist={addPlaylist} playlists={playlists} setSongList={setSongList} fetchSongs={fetchSongs} activeTile={activeTile} setActiveTile={setActiveTile} fetchBoughtSongs={fetchBoughtSongs}/>
           </div>
           <div className="col-start-2 col-end-3 row-start-1 row-end-2">
-            <Header title="Newly Released" contract={contract} setSongList={setSongList} connectWalletHandler={connectWalletHandler} songList={songList}/>
+            <Header title={activeTile} contract={contract} setSongList={setSongList} connectWalletHandler={connectWalletHandler} fetchSongs={fetchSongs} fetchSongsByGenre={fetchSongsByGenre} searchSongByName={searchSongByName}/>
           </div>
           <div className="col-start-2 col-end-3 row-start-2 row-end-3 overflow-y-scroll overflow-x-hidden">
-            <SongList songs={songList} currentSong={currentSong} handleSongChange={handleSongChange} />
+            <SongList songs={songList} currentSong={currentSong} handleSongChange={handleSongChange} playlists={playlists} addSongToPlaylist={addSongToPlaylist} deleteSongFromPlaylist={deleteSongFromPlaylist} ownedSongIds={ownedSongIds} buySong={(e) => contract.BuyNFT(e, defaultAccount, 'abararmalek007@gmail.com')} />
           </div>
           <div className="col-start-1 col-end-3 row-start-3 row-end-4 ">
             <Player currentSong={currentSong} audioRef={audioRef} isPlaying={isPlaying} setIsPlaying={setIsPlaying} songInfo={songInfo} setSongInfo={setSongInfo} />
@@ -176,7 +376,7 @@ useEffect(()=>{
         <LoadingOverlay active={isUploading} spinner={<Triangle ariaLabel="loading-indicator" />}>
           <div className="flex flex-col bg-custom-grey h-screen max-h-full items-center justify-center">
             {/* {console.log('up: '+contract)} */}
-            <UploadPage setIsUploading={setIsUploading} contract={contract} connectWalletHandler={connectWalletHandler}/>
+            <UploadPage setIsUploading={setIsUploading} contract={contract} connectWalletHandler={connectWalletHandler} uploadSongToMongoDB={uploadSongToMongoDB}/>
           </div>
         </LoadingOverlay>
       } />

@@ -11,7 +11,7 @@ import 'react-dropdown/style.css';
 export const UploadPage = (props) => {
     
     const Genres = [
-        'Electronic', 'Hip-Hop', 'Disco','Other'
+        'Electonic', 'Hip-Hop','Other'
       ];
     
 
@@ -92,9 +92,14 @@ export const UploadPage = (props) => {
         const newSongFile = renameFile(selectedSongFile,songName,artistName);
         const newCoverFile = renameFile(selectedCoverFile,songName,artistName);
         console.log(duration);
-        const song_cid = await storage.put([newSongFile]);
+        console.log("uploading to ipfs");
         const cover_cid = await storage.put([newCoverFile]);
+        console.log("uploaded cover to ipfs");
+        const song_cid = await storage.put([newSongFile]);
+        console.log("uploaded to ipfs");
+        console.log("uploading to blockchain");
         await uploadSongDetails(newSongFile.name,song_cid,newCoverFile.name,cover_cid);
+        console.log("uploaded to blockchain");
         props.setIsUploading(false);
         console.log('Content added with CID:', song_cid);
         console.log('Content added with CID:', cover_cid);
@@ -103,7 +108,8 @@ export const UploadPage = (props) => {
     const uploadSongDetails = async (songFile_name,song_cid,coverFile_name,cover_cid) => {
       const song_url = `https://${song_cid}.ipfs.infura-ipfs.io/${songFile_name}`;
       const cover_url = `https://${cover_cid}.ipfs.infura-ipfs.io/${coverFile_name}`;
-      const result = await props.contract.UploadSong(artistName,songName,cover_url,song_url,startDate.getTime(),duration,'pop',price,quantity);
+      const result = await props.contract.UploadSong(artistName,songName,cover_url,song_url,startDate.getTime(),duration,genre,price,quantity);
+      await props.uploadSongToMongoDB(songName);
         console.log(result);
     }
     const getFileExt = (f) => {
