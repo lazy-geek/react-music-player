@@ -39,6 +39,13 @@ function App() {
   const [signer, setSigner] = useState(null);
   const [contract, setContract] = useState(null);
 
+  const getIPFSLink=(str) =>{
+    let hash = str.split(".")[0].split(":")[1].slice(2);
+    console.log("hash: "+ hash);
+    let filename =str.split("/").pop();
+    console.log("filename: "+ filename);
+    return "https://cloudflare-ipfs.com/ipfs/" +hash + "/"+filename;
+}
   const connectWalletHandler = () => {
     console.log("call");
     if (window.ethereum && window.ethereum.isMetaMask) {
@@ -100,10 +107,10 @@ function App() {
       let temp = {
         'id': parseInt(song['_id'].toHexString(), 16),
         'ArtistName': song['ArtistName'],
-        'TrackURL': song['ArtURL'],
+        'TrackURL': getIPFSLink(song['ArtURL']),
         "TrackTitle": song['SongName'],
         "ReleaseDate": parseInt(song['TimeStamp'].toHexString(), 16),
-        "ArtWorkURl": song['CoverURL'],
+        "ArtWorkURl": getIPFSLink(song['CoverURL']),
         "TrackLikes": 0,
         "TrackDuration": song['Length']
       }
@@ -124,10 +131,10 @@ function App() {
       let temp = {
         'id': parseInt(song['_id'].toHexString(), 16),
         'ArtistName': song['ArtistName'],
-        'TrackURL': song['ArtURL'],
+        'TrackURL': getIPFSLink(song['ArtURL']),
         "TrackTitle": song['SongName'],
         "ReleaseDate": parseInt(song['TimeStamp'].toHexString(), 16),
-        "ArtWorkURl": song['CoverURL'],
+        "ArtWorkURl": getIPFSLink(song['CoverURL']),
         "TrackLikes": 0,
         "TrackDuration": song['Length']
       }
@@ -149,10 +156,10 @@ function App() {
       let temp = {
         'id': parseInt(song['_id'].toHexString(), 16),
         'ArtistName': song['ArtistName'],
-        'TrackURL': song['ArtURL'],
+        'TrackURL': getIPFSLink(song['ArtURL']),
         "TrackTitle": song['SongName'],
         "ReleaseDate": parseInt(song['TimeStamp'].toHexString(), 16),
-        "ArtWorkURl": song['CoverURL'],
+        "ArtWorkURl": getIPFSLink(song['CoverURL']),
         "TrackLikes": 0,
         "TrackDuration": song['Length']
       }
@@ -186,10 +193,10 @@ function App() {
       let temp = {
         'id': parseInt(song['_id'].toHexString(), 16),
         'ArtistName': song['ArtistName'],
-        'TrackURL': song['ArtURL'],
+        'TrackURL': getIPFSLink(song['ArtURL']),
         "TrackTitle": song['SongName'],
         "ReleaseDate": parseInt(song['TimeStamp'].toHexString(), 16),
-        "ArtWorkURl": song['CoverURL'],
+        "ArtWorkURl": getIPFSLink(song['CoverURL']),
         "TrackLikes": 0,
         "TrackDuration": song['Length']
       }
