@@ -25,7 +25,7 @@ const serverUrl = "https://dml-server.herokuapp.com";
 
 function App() {
   // -----------------------------------------------------------------------------------------------------------
-  let contractAddress = '0x42D462c030CC2276780E5345210E6245b6EB1Aa5';
+  let contractAddress = '0x5FD9720af68e71B8Cd1C990B04bca8c4c7f195DD';
   const [errorMessage, setErrorMessage] = useState(null);
   const [defaultAccount, setDefaultAccount] = useState(null);
   const [jwtToken, setJwtToken] = useState("");

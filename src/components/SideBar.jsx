@@ -3,7 +3,6 @@ import { useState } from 'react';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import { useNavigate } from "react-router-dom";
-import { shuffleArray } from '../helpers';
 
 const Header = () => {
     
