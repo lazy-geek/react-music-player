@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useCallback } from "react";
 import socketIOClient from "socket.io-client";
+
 
 export const Header = (props) => {
     const ENDPOINT="https://dml-server.herokuapp.com";
@@ -10,6 +11,20 @@ export const Header = (props) => {
     // useEffect(() =>{
     //     props.connectWalletHandler();
     // },[]);
+    // const throttleSearch = useCallback(
+	// 	throttle(nextValue => search(nextValue), 1000),
+	// 	[], // will be created only once initially
+	// );
+    const search = (value)=>{
+        socket.emit("searchQuery", { searchQuery: value});
+        socket.on("found", (data) => {
+            console.log("data found");
+            console.log(data)
+            // console.log(JSON.stringify(data));
+            
+            props.searchSongByName(data);
+        });
+    };
     const socket = socketIOClient(ENDPOINT);
     useEffect(()=>{
         socket.on("connect",()=>{
@@ -46,14 +61,8 @@ export const Header = (props) => {
             props.fetchSongs();
             return;
         }
-        socket.emit("searchQuery", { searchQuery: e.target.value.toString() });
-        socket.on("found", (data) => {
-            console.log("found");
-            console.log(data)
-            // console.log(JSON.stringify(data));
-            
-            props.searchSongByName(data);
-        });
+        // throttleSearch(e.target.value.toString());
+        search(e.target.value.toString());
         // console.log(props.contract);
         // console.log(isFirstTime);
         // if(searchTxt.trim() == ''){
