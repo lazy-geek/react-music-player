@@ -2,11 +2,18 @@ import React from 'react';
 import { useState } from 'react';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
+import { useNavigate } from "react-router-dom";
+import { shuffleArray } from '../helpers';
 
 const Header = () => {
+    
+    let navigateTo = useNavigate();
+    const gotoUploadPage = () => {
+        navigateTo("/upload");
+    }
     return (
-        <div className="bg-white h-14">
-
+        <div className="bg-white h-14 flex flex-col justify-center">
+            <button className="self-center cursor-pointer text-secondary font-bold border-2 px-3 py-1 border-secondary" onClick={gotoUploadPage}>Upload</button>
         </div>
     )
 }
@@ -25,42 +32,41 @@ const UserCard = () => {
 export const SideBar = (props) => {
     const contentStyle = { width: 'max-content' };
     const [playlistName, setPlaylistName] = useState("");
-
-    // if(props.playlists) console.log("in sidebar:"+props.playlists[0]['id']);
-    const activeStyle=(a,active,notactive)=>{
-        const mystyle =props.activeTile === a ? " "+active:" "+notactive;
-        // console.log(mystyle);
+    const activeStyle = (a, active, notactive) => {
+        const mystyle = props.activeTile === a ? " " + active : " " + notactive;
         return mystyle;
     }
+
     return (
         <div className="w-full h-full bg-[#FCFCFC] ">
             <Header></Header>
 
             <div className="h-[320px] overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scroll-smooth">
 
-                <UserCard />
+                {/* <UserCard /> */}
+
 
                 <div className="mb-4">
                     <h3 className="text-[#c2c0cc] font-black text-lg uppercase tracking-wider pl-8">Discover</h3>
-                    <div className={" font-medium text-sm pl-12 cursor-pointer" + activeStyle("Newly Released","text-secondary","text-[#6a677a]")} onClick={()=>props.fetchSongs()}>Newly Released</div>
-                    <div className={" font-medium text-sm pl-12 cursor-pointer" + activeStyle("Trending","text-secondary","text-[#6a677a]")}>Trending</div>
-                    <div className={" font-medium text-sm pl-12 cursor-pointer" + activeStyle("Explore","text-secondary","text-[#6a677a]")}>Explore</div>
+                    <div className={"mb-0.5 font-medium text-sm pl-12 cursor-pointer" + activeStyle("Newly Released", "text-secondary", "text-[#6a677a]")} onClick={() => props.fetchSongs()}>Newly Released</div>
+                    <div className={"mb-0.5 font-medium text-sm pl-12 cursor-pointer" + activeStyle("Trending", "text-secondary", "text-[#6a677a]")} onClick={() => props.setActiveTile("Trending")}>Trending</div>
+                    <div className={" font-medium text-sm pl-12 cursor-pointer" + activeStyle("Explore", "text-secondary", "text-[#6a677a]")} onClick={() => props.setActiveTile("Explore")}>Explore</div>
                 </div>
 
                 <div className="mb-4">
                     <h3 className="text-[#c2c0cc] font-black text-lg uppercase tracking-wider pl-8">Library</h3>
-                    <div className={"font-medium text-sm pl-12 cursor-pointer" + activeStyle("Bought","text-secondary","text-[#6a677a]")} onClick={()=>props.fetchBoughtSongs()}>Bought</div>
-                    <div className={"font-medium text-sm pl-12 cursor-pointer" + activeStyle("History","text-secondary","text-[#6a677a]")} >History</div>
-                    <div className={"font-medium text-sm pl-12 cursor-pointer" + activeStyle("Explore2","text-secondary","text-[#6a677a]")}>Explore2</div>
+                    <div className={"mb-0.5 font-medium text-sm pl-12 cursor-pointer" + activeStyle("Bought", "text-secondary", "text-[#6a677a]")} onClick={() => props.fetchBoughtSongs()}>Bought</div>
+                    {/* <div className={"font-medium text-sm pl-12 cursor-pointer" + activeStyle("History","text-secondary","text-[#6a677a]")} >History</div> */}
+                    {/* <div className={"font-medium text-sm pl-12 cursor-pointer" + activeStyle("Explore2","text-secondary","text-[#6a677a]")}>Explore2</div> */}
                 </div>
 
-                <div className="flex mb-4 flex-row pl-8 pr-10 items-baseline justify-between">
+                <div className="flex mb-2 flex-row pl-8 pr-10 items-baseline justify-between">
                     <h3 className="text-[#c2c0cc] font-black text-lg uppercase tracking-wider ">Playlists</h3>
                     <Popup trigger={<button className="text-2xl text-[#c2c0cc] ">+</button>} position="bottom center" contentStyle={contentStyle}>
                         <div className="flex flex-col">
 
                             <input type="text" name="playlistName" id="playlistName" value={playlistName} onChange={(e) => setPlaylistName(e.target.value)} placeholder="Playlist Name" className="bg-white p-2 mb-2  outline-none border-[#dee2e6] border-[1px]" />
-                            <button className="self-center  w-full uppercase  bg-fuchsia-500 text-base font-bold py-1 text-white  rounded-sm scale-100 hover:scale-105 transition-all duration-150" onClick={() => {props.addPlaylist(playlistName)}}>Add</button>
+                            <button className="self-center  w-full uppercase  bg-fuchsia-500 text-base font-bold py-1 text-white  rounded-sm scale-100 hover:scale-105 transition-all duration-150" onClick={() => { props.addPlaylist(playlistName) }}>Add</button>
                         </div>
 
 
@@ -68,12 +74,13 @@ export const SideBar = (props) => {
 
                 </div>
                 <div className="flex flex-col pl-8 pr-10">
-                    {props.playlists!=null && props.playlists.map(playlist => {
+                    {props.playlists != null && props.playlists.map(playlist => {
                         return <li key={playlist.id} className="list-none">
-                            <button className={" mb-2 text-base uppercase tracking-wider" + activeStyle(playlist.id,"text-secondary","text-black")} onClick={()=>{
+                            <button className={" mb-2 text-base uppercase tracking-wider" + activeStyle(playlist.ListTitle, "text-secondary", "text-black")} onClick={() => {
                                 props.setActiveTile(playlist.ListTitle);
-                                props.setSongList(playlist.List)}}>
-                            {playlist.ListTitle} 
+                                props.setSongList(playlist.List)
+                            }}>
+                                {playlist.ListTitle}
 
                             </button>
                         </li>
