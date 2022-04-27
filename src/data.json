@@ -1,0 +1,62 @@
+[
+    {
+        "id": 0,
+        "ArtistName": "Andromedik",
+        "Price": 5.0,
+        "TrackURL": "https://bafybeig62ja2c2i477fk7ydfwribflgp5g7wdp26dqrb3qfnwpgx6krf4q.ipfs.infura-ipfs.io/Andromedik.Take_Me.mp3",
+        "TrackTitle": "Take Me",
+        "ReleaseDate": 1611247902000,
+        "ArtWorkURl": "https://bafybeieex5mxrvtgwaujbvchkczeatdm2j3ytjfk7kxcbt5u3irob6ibfy.ipfs.infura-ipfs.io/Andromedik.Take_Me.jpg",
+        "TrackLikes": 0,
+        "TrackDuration": "03:13",
+        "quantity": 10
+    },
+    {
+        "id": 1,
+        "ArtistName": "Arcando",
+        "Price": 5.0,
+        "TrackURL": "https://bafybeih75l47bap7bekcer2ktwewdvnx7t5r67bf4rsord57cgmiq73wye.ipfs.infura-ipfs.io/Arcando.In_My_Head.mp3",
+        "TrackTitle": "In My Head",
+        "ReleaseDate": 1609692702000,
+        "ArtWorkURl": "https://bafybeid5axzqfkeczaajwgcw3axhizprn6ids5hbcypujsvuvdpmohpd2q.ipfs.infura-ipfs.io/Arcando.In_My_Head.jpg",
+        "TrackLikes": 0,
+        "TrackDuration": "03:08",
+        "quantity": 10
+    },
+    {
+        "id": 2,
+        "ArtistName": "Elektronomia",
+        "Price": 5.0,
+        "TrackURL": "https://bafybeicrfecihj3x3fl4gnghf3nkfnemq74ssqtljjp6pk3qyfmv4qbj4e.ipfs.infura-ipfs.io/Elektronomia.Champions.mp3",
+        "TrackTitle": "Champions",
+        "ReleaseDate": 1586019102000,
+        "ArtWorkURl": "https://bafybeid3qgagtg2cjrhbmzwxm3jojejbc6fviw6t7mvb2vc72sgmg427xq.ipfs.infura-ipfs.io/Elektronomia.Champions.jpg",
+        "TrackLikes": 0,
+        "TrackDuration": "03:30",
+        "quantity": 10
+    },
+    {
+        "id": 3,
+        "ArtistName": "Neoni",
+        "Price": 5.0,
+        "TrackURL": "https://bafybeiayvomahwf6nz5fh66wuyk2cpb72qyvhfngvzq7z2jqoep23jlaue.ipfs.infura-ipfs.io/Neoni.Haunted_House.mp3",
+        "TrackTitle": "Haunted House",
+        "ReleaseDate": 1587401502000,
+        "ArtWorkURl": "https://bafybeiaiduwe7ahuorq5hehcoeyumbuf3ifbb4nh7dzg6z7gsev77c2bia.ipfs.infura-ipfs.io/Neoni.Haunted_House.jpg",
+        "TrackLikes": 0,
+        "TrackDuration": "03:01",
+        "quantity": 10
+    },
+    {
+        "id": 4,
+        "ArtistName": "Sam Ourt",
+        "Price": 5.0,
+        "TrackURL": "https://bafybeidsrcexpaseo4bfgx7a6iwjfhxii2owyomoyzkbxpr3z4htxynbnq.ipfs.infura-ipfs.io/Sam_Ourt.Escape.mp3",
+        "TrackTitle": "Escape",
+        "ReleaseDate": 1597683102000,
+        "ArtWorkURl": "https://bafybeifaxm7g4j3bqwnwi64oyxlii7jtekwznq5yoiisdcbdiukchbgboi.ipfs.infura-ipfs.io/Sam_Ourt.Escape.jpg",
+        "TrackLikes": 0,
+        "TrackDuration": "02:22",
+        "quantity": 10
+    }
+]
