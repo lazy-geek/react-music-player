@@ -25,12 +25,13 @@ const serverUrl = "https://dml-server.herokuapp.com";
 
 function App() {
   // -----------------------------------------------------------------------------------------------------------
-  let contractAddress = '0xe6BeBE8776bbe040D87d85f0164D215e06d917c1';
+  let contractAddress = '0x42D462c030CC2276780E5345210E6245b6EB1Aa5';
   const [errorMessage, setErrorMessage] = useState(null);
   const [defaultAccount, setDefaultAccount] = useState(null);
   const [jwtToken, setJwtToken] = useState("");
   const [playlists, setPlaylists] = useState(null);
   const [ownedSongIds, setOwnedSongIds] = useState([]);
+  const [isBuying,setIsBuying] = useState(0);
   const [connButtonText, setConnButtonText] = useState('Login');
   const [activeTile, setActiveTile] = useState("Newly Released");
   const [currentContractVal, setCurrentContractVal] = useState(null);
@@ -41,25 +42,26 @@ function App() {
 
   const getIPFSLink=(str) =>{
     let hash = str.split(".")[0].split(":")[1].slice(2);
-    console.log("hash: "+ hash);
     let filename =str.split("/").pop();
-    console.log("filename: "+ filename);
+    // console.log("ipfslink: "+ "https://cloudflare-ipfs.com/ipfs/" +hash + "/"+filename);
     return "https://cloudflare-ipfs.com/ipfs/" +hash + "/"+filename;
 }
+
+ useEffect(()=>{
+  connectWalletHandler();
+ },[]);
   const connectWalletHandler = () => {
-    console.log("call");
+    console.log("connect To Wallet");
     if (window.ethereum && window.ethereum.isMetaMask) {
 
       window.ethereum.request({ method: 'eth_requestAccounts' })
         .then(result => {
-          console.log(result);
           accountChangedHandler(result[0]);
           setConnButtonText('Connected');
 
         })
         .catch(error => {
           setErrorMessage(error.message);
-          console.log(error)
         });
 
     } else {
@@ -86,7 +88,6 @@ function App() {
   window.ethereum.on('chainChanged', chainChangedHandler);
 
   const updateEthers = () => {
-    console.log('contrxctr');
     let tempProvider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(tempProvider);
 
@@ -104,9 +105,12 @@ function App() {
     let songs = [];
     for (let i = 0; i < names.length; i++) {
       let song = await contract.SearchSong(names[i]['Track']);
+      let price  = await contract.getIndividualNFT(parseInt(song['_id'].toHexString(), 16));
+      price = price.TokenValue;
       let temp = {
         'id': parseInt(song['_id'].toHexString(), 16),
         'ArtistName': song['ArtistName'],
+        'Price': ethers.utils.formatUnits(price),
         'TrackURL': getIPFSLink(song['ArtURL']),
         "TrackTitle": song['SongName'],
         "ReleaseDate": parseInt(song['TimeStamp'].toHexString(), 16),
@@ -125,12 +129,16 @@ function App() {
     let id = await contract.NewlyRealsed();
     id = parseInt(id.toHexString(), 16);
     let songs = [];
+    console.log("fetchSongs");
+
     for (let i = 0; i < id; i++) {
       let song = await contract.getSongById(i);
-      console.log(song);
+      let price  = await contract.getIndividualNFT(i);
+      price = price.TokenValue;
       let temp = {
         'id': parseInt(song['_id'].toHexString(), 16),
         'ArtistName': song['ArtistName'],
+        'Price': ethers.utils.formatUnits(price),
         'TrackURL': getIPFSLink(song['ArtURL']),
         "TrackTitle": song['SongName'],
         "ReleaseDate": parseInt(song['TimeStamp'].toHexString(), 16),
@@ -139,23 +147,40 @@ function App() {
         "TrackDuration": song['Length']
       }
       songs[i] = temp;
+      console.log(`{
+        'id': ${temp.id},
+        'ArtistName': '${temp.ArtistName}',
+        'Price': ${temp.Price},
+        'TrackURL': '${song['ArtURL']}',
+        "TrackTitle": '${temp.TrackTitle}',
+        "ReleaseDate": ${temp.ReleaseDate},
+        "ArtWorkURl": '${song['CoverURL']}',
+        "TrackLikes": 0,
+        "TrackDuration": ${temp.TrackDuration}
+        "quantity": 10,
+      }`);
     }
     setSongList(songs);
     setActiveTile("Newly Released");
     fetchOwnedSongsIds();
-    // console.log(songs);
+    setCurrentSong(songs[0]);
+    audioRef?.current?.load();
   }
 
   const fetchSongsByGenre = async (g) => {
     if (contract === null) return;
     let names = await contract.Explore(g);
-
+    console.log("fetchSongsByGenre");
+    
     let songs = [];
     for (let i = 0; i < names.length; i++) {
       let song = await contract.SearchSong(names[i]);
+      let price  = await contract.getIndividualNFT(parseInt(song['_id'].toHexString(), 16));
+      price = price.TokenValue;
       let temp = {
         'id': parseInt(song['_id'].toHexString(), 16),
         'ArtistName': song['ArtistName'],
+        'Price': ethers.utils.formatUnits(price),
         'TrackURL': getIPFSLink(song['ArtURL']),
         "TrackTitle": song['SongName'],
         "ReleaseDate": parseInt(song['TimeStamp'].toHexString(), 16),
@@ -167,10 +192,12 @@ function App() {
     }
     setSongList(songs);
     setActiveTile("Newly Released");
-    // console.log(songs);
+    setCurrentSong(songs[0]);
+    audioRef.current.load();
   }
 
   const fetchOwnedSongsIds = async () => {
+    console.log("fetchOwnedSongsIds");
     if (contract === null || defaultAccount === null) return;
     let ids = await contract.GetListOfNFTOwned();
     let temp=[];
@@ -183,16 +210,18 @@ function App() {
   }
 
   const fetchBoughtSongs = async () => {
+    console.log("fetchBoughtSongs");
     if (contract === null || defaultAccount === null || !ownedSongIds) return;
     let songs = [];
     for (let i = 0; i < ownedSongIds.length; i++) {
       let  id = ownedSongIds[i];
       let song = await contract.getSongById(id);
-      console.log(song);
-      
+      let price  = await contract.getIndividualNFT(id);
+      price = price.TokenValue;
       let temp = {
         'id': parseInt(song['_id'].toHexString(), 16),
         'ArtistName': song['ArtistName'],
+        'Price': ethers.utils.formatUnits(price),
         'TrackURL': getIPFSLink(song['ArtURL']),
         "TrackTitle": song['SongName'],
         "ReleaseDate": parseInt(song['TimeStamp'].toHexString(), 16),
@@ -204,31 +233,47 @@ function App() {
     }
     setSongList(songs);
     setActiveTile("Bought");
+    setCurrentSong(songs[0]);
+    audioRef.current.load();
   }
   const connectToDML = async () => {
     if (defaultAccount === null) return;
-    console.log('connecting to server');
-    console.log(defaultAccount);
+    console.log('connecting DML to server');
+    console.log('Account: '+defaultAccount);
     const a = {
       wallet: defaultAccount,
     };
     let res = await axios.post(`${serverUrl}/playlist/connect`, a);
-      
-        console.log(res.data);
         setJwtToken(res.data['authToken']);
   }
-  const buySong = async (i) => {
+  const buySong = async (i,email) => {
     if (defaultAccount === null) return;
+    setIsBuying(1);
+    // console.log("loading");
+    // sleep(10000);
+    
+    // console.log("song bought");
     let price  = await contract.getIndividualNFT(i);
     price = price.TokenValue;
-    console.log("buy price: "+price);
     let finalPrice = ethers.utils.formatUnits(price);
     console.log("final price:"+finalPrice);
     let options = {value: ethers.utils.parseEther(finalPrice)};
-    await contract.BuyNFT(BigNumber.from(i), defaultAccount, 'abararmalek007@gmail.com',options).then((res)=>{
+    await contract.BuyNFT(BigNumber.from(i), defaultAccount, email,options).then((res)=>{
       console.log("res data :"+res.data.message);
     });
+    await fetchSongs();
+    setIsBuying(0);
   }
+  // useEffect(()=>{
+  //   console.log("is buying: "+ isBuying);
+  // },[isBuying]);
+  // function sleep(milliseconds) {
+  //   const date = Date.now();
+  //   let currentDate = null;
+  //   do {
+  //     currentDate = Date.now();
+  //   } while (currentDate - date < milliseconds);
+  // }
   useEffect(() => {
     fetchSongs();
   }, [contract]);
@@ -245,7 +290,6 @@ function App() {
   const addPlaylist = (pname) => {
     if (jwtToken === "" || defaultAccount === null || pname.trim() == '') return;
     console.log('adding playlist');
-    // console.log(defaultAccount);
     const a = {
       wallet: defaultAccount,
       playlistTitle: pname
@@ -256,14 +300,13 @@ function App() {
       }
     }).then(res => {
       console.log(res);
-      console.log(res.data);
+      getAllPlaylist();
     });
-    getAllPlaylist();
   }
 
   const addSongToPlaylist = (playlistId,song) => {
     if (jwtToken === "" || defaultAccount === null || !playlistId || !song) return;
-    console.log('adding playlist');
+    console.log('adding song to playlist');
     // console.log(defaultAccount);
     const a = {
       wallet: defaultAccount,
@@ -275,15 +318,14 @@ function App() {
         "token": `${jwtToken}`,
       }
     }).then(res => {
-      console.log(res);
       console.log(res.data);
+      getAllPlaylist();
     });
   }
 
   const deleteSongFromPlaylist  = (playlistId,song) => {
     if (jwtToken === "" || defaultAccount === null || !playlistId || !song) return;
     console.log(`deleting ${song.id}`);
-    // console.log(defaultAccount);
     const a = {
       wallet: defaultAccount,
       PlaylistID: playlistId,
@@ -294,9 +336,11 @@ function App() {
         "token": `${jwtToken}`,
       }
     }).then(res => {
-      console.log(res);
       console.log(res.data);
+    getAllPlaylist();
+
     });
+
   }
   const getAllPlaylist = () => {
     if (jwtToken === "" || defaultAccount === null) return;
@@ -309,7 +353,6 @@ function App() {
         "token": `${jwtToken}`,
       }
     }).then(res => {
-      console.log(res);
       console.log('playlists: '+res.data);
       setPlaylists(res.data["Playlists"]);
     });
@@ -317,7 +360,7 @@ function App() {
 
   const uploadSongToMongoDB = (sname) => {
     if (jwtToken === "" || defaultAccount === null) return;
-    console.log("upload to mongodb");
+    console.log("upload song to mongodb");
     const a = {
       wallet: defaultAccount,
       track: sname
@@ -327,7 +370,7 @@ function App() {
         "token": `${jwtToken}`,
       }
     }).then(res => {
-      console.log('uploaded to mongo:' + res);
+      console.log('uploaded song to mongodb: ' + res);
     });
   }
   // ---------------------------------------------------------------------------------
@@ -340,6 +383,7 @@ function App() {
   const [currentSong, setCurrentSong] = useState({
     'id': '',
     'ArtistName': '',
+    'Price':0,
     'TrackURL': '',
     "TrackTitle": '',
     "ReleaseDate": '',
@@ -349,18 +393,22 @@ function App() {
   });
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const [songInfo, setSongInfo] = useState({
-    currentTime: 0,
-    duration: 0,
-  });
+  useEffect(()=>{
+    console.log("play changed :"+ isPlaying);
+    if (isPlaying === true) {
+        audioRef?.current?.play();
+    }
+    else {
+        audioRef?.current?.pause();
+    }
+},[isPlaying]);
+
 
   function handleSongChange(song) {
-    audioRef.current.pause();
-    setIsPlaying(false);
-    setCurrentSong(song);
-    audioRef.current.load();
-    audioRef.current.play();
-    setIsPlaying(true);
+     setIsPlaying(false);
+     setCurrentSong(song);
+     audioRef.current.load();
+     setIsPlaying(true);
   }
 
 
@@ -376,9 +424,10 @@ function App() {
 
     <Routes>
       <Route path="/" element={
+        <LoadingOverlay active={parseInt(isBuying)} spinner={<Triangle ariaLabel="loading-indicator" />}>
         <div className="bg-custom-grey grid grid-cols-[20%_auto] grid-rows-[auto_auto_10%] h-screen overflow-hidden">
           <div className="col-start-1 col-end-2 row-start-1 row-end-3">
-            <SideBar art={currentSong.ArtWorkURl} connectWalletHandler={connectWalletHandler} connButtonText={connButtonText} addPlaylist={addPlaylist} playlists={playlists} setSongList={setSongList} fetchSongs={fetchSongs} activeTile={activeTile} setActiveTile={setActiveTile} fetchBoughtSongs={fetchBoughtSongs}/>
+            <SideBar art={currentSong?.ArtWorkURl ?? ""} connectWalletHandler={connectWalletHandler} connButtonText={connButtonText} addPlaylist={addPlaylist} playlists={playlists} setSongList={setSongList} songList={songList} fetchSongs={fetchSongs}  activeTile={activeTile} setActiveTile={setActiveTile} fetchBoughtSongs={fetchBoughtSongs}/>
           </div>
           <div className="col-start-2 col-end-3 row-start-1 row-end-2">
             <Header title={activeTile} contract={contract} setSongList={setSongList} connectWalletHandler={connectWalletHandler} fetchSongs={fetchSongs} fetchSongsByGenre={fetchSongsByGenre} searchSongByName={searchSongByName}/>
@@ -387,14 +436,15 @@ function App() {
             <SongList songs={songList} currentSong={currentSong} handleSongChange={handleSongChange} playlists={playlists} addSongToPlaylist={addSongToPlaylist} deleteSongFromPlaylist={deleteSongFromPlaylist} ownedSongIds={ownedSongIds} buySong={(e) => buySong(e)} />
           </div>
           <div className="col-start-1 col-end-3 row-start-3 row-end-4 ">
-            <Player currentSong={currentSong} audioRef={audioRef} isPlaying={isPlaying} setIsPlaying={setIsPlaying} songInfo={songInfo} setSongInfo={setSongInfo} />
+            <Player currentSong={currentSong} handleSongChange={handleSongChange} setCurrentSong={setCurrentSong} audioRef={audioRef} isPlaying={isPlaying} setIsPlaying={setIsPlaying}  songList={songList}/>
 
           </div>
         </div>
+        </LoadingOverlay>
       } />
       <Route path="upload" element={
         <LoadingOverlay active={isUploading} spinner={<Triangle ariaLabel="loading-indicator" />}>
-          <div className="flex flex-col bg-custom-grey h-screen max-h-full items-center justify-center">
+          <div className="flex flex-col bg-custom-grey min-h-screen max-h-full items-center justify-center">
             {/* {console.log('up: '+contract)} */}
             <UploadPage setIsUploading={setIsUploading} contract={contract} connectWalletHandler={connectWalletHandler} uploadSongToMongoDB={uploadSongToMongoDB}/>
           </div>
