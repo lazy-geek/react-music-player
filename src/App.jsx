@@ -167,6 +167,49 @@ function App() {
     audioRef?.current?.load();
   }
 
+  const fetchArtistSongs = async (artist) => {
+    if (contract === null) return;
+    let names = await contract.GetArtistSongList(artist);
+    let songs = [];
+    console.log("fetchArtistSongs");
+
+    for (let i = 0; i < names.length; i++) {
+      let song = await contract.SearchSong(names[i]);
+      let price  = await contract.getIndividualNFT(parseInt(song['_id'].toHexString(), 16));
+      price = price.TokenValue;
+      let temp = {
+        'id': parseInt(song['_id'].toHexString(), 16),
+        'ArtistName': song['ArtistName'],
+        'Price': ethers.utils.formatUnits(price),
+        'TrackURL': getIPFSLink(song['ArtURL']),
+        "TrackTitle": song['SongName'],
+        "ReleaseDate": parseInt(song['TimeStamp'].toHexString(), 16),
+        "ArtWorkURl": getIPFSLink(song['CoverURL']),
+        "TrackLikes": 0,
+        "TrackDuration": song['Length']
+      }
+      songs[i] = temp;
+      // console.log("artist song: "+ temp)
+      // console.log(`{
+      //   'id': ${temp.id},
+      //   'ArtistName': '${temp.ArtistName}',
+      //   'Price': ${temp.Price},
+      //   'TrackURL': '${song['ArtURL']}',
+      //   "TrackTitle": '${temp.TrackTitle}',
+      //   "ReleaseDate": ${temp.ReleaseDate},
+      //   "ArtWorkURl": '${song['CoverURL']}',
+      //   "TrackLikes": 0,
+      //   "TrackDuration": ${temp.TrackDuration}
+      //   "quantity": 10,
+      // }`);
+    }
+    setSongList(songs);
+    fetchOwnedSongsIds();
+    setActiveTile(artist);
+    setCurrentSong(songs[0]);
+    audioRef?.current?.load();
+  }
+
   const fetchSongsByGenre = async (g) => {
     if (contract === null) return;
     let names = await contract.Explore(g);
@@ -433,7 +476,7 @@ function App() {
             <Header title={activeTile} contract={contract} setSongList={setSongList} connectWalletHandler={connectWalletHandler} fetchSongs={fetchSongs} fetchSongsByGenre={fetchSongsByGenre} searchSongByName={searchSongByName}/>
           </div>
           <div className="col-start-2 col-end-3 row-start-2 row-end-3 overflow-y-scroll overflow-x-hidden">
-            <SongList songs={songList} currentSong={currentSong} handleSongChange={handleSongChange} playlists={playlists} addSongToPlaylist={addSongToPlaylist} deleteSongFromPlaylist={deleteSongFromPlaylist} ownedSongIds={ownedSongIds} buySong={(e) => buySong(e)} />
+            <SongList fetchArtistSongs={fetchArtistSongs} songs={songList} currentSong={currentSong} handleSongChange={handleSongChange} playlists={playlists} addSongToPlaylist={addSongToPlaylist} deleteSongFromPlaylist={deleteSongFromPlaylist} ownedSongIds={ownedSongIds} buySong={(e) => buySong(e)} />
           </div>
           <div className="col-start-1 col-end-3 row-start-3 row-end-4 ">
             <Player currentSong={currentSong} handleSongChange={handleSongChange} setCurrentSong={setCurrentSong} audioRef={audioRef} isPlaying={isPlaying} setIsPlaying={setIsPlaying}  songList={songList}/>
