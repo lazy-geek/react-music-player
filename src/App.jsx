@@ -25,7 +25,7 @@ const serverUrl = "https://dml-server.herokuapp.com";
 
 function App() {
   // -----------------------------------------------------------------------------------------------------------
-  let contractAddress = '0x5FD9720af68e71B8Cd1C990B04bca8c4c7f195DD';
+  let contractAddress = '0x717785101964e72b1B41d73098957d1eD71BCcc8';
   const [errorMessage, setErrorMessage] = useState(null);
   const [defaultAccount, setDefaultAccount] = useState(null);
   const [jwtToken, setJwtToken] = useState("");
@@ -98,28 +98,21 @@ function App() {
     setContract(tempContract);
   }
   // ---------------------------------------------------------------------------------
-  const searchSongByName = async (names) => {
-    if (contract === null) return;
-    if(!names || names == "errors") return;
-    if(names.length == 0) return;
+  const searchSongByName = async (name) => {
+    if (songList === null) return;
+    if(!name) return;
     let songs = [];
-    for (let i = 0; i < names.length; i++) {
-      let song = await contract.SearchSong(names[i]['Track']);
-      let price  = await contract.getIndividualNFT(parseInt(song['_id'].toHexString(), 16));
-      price = price.TokenValue;
-      let temp = {
-        'id': parseInt(song['_id'].toHexString(), 16),
-        'ArtistName': song['ArtistName'],
-        'Price': ethers.utils.formatUnits(price),
-        'TrackURL': getIPFSLink(song['ArtURL']),
-        "TrackTitle": song['SongName'],
-        "ReleaseDate": parseInt(song['TimeStamp'].toHexString(), 16),
-        "ArtWorkURl": getIPFSLink(song['CoverURL']),
-        "TrackLikes": 0,
-        "TrackDuration": song['Length']
+    songs = songList.filter((val,index,arr)=>{
+      let result= val['TrackTitle'].toLowerCase().indexOf(name.toLowerCase());
+      console.log(result);
+      if(result == -1){
+        return false;
       }
-      songs[i] = temp;
-    }
+      else{
+        return true;
+      }
+    });
+    console.log(songs);
     setSongList(songs);
 
   }

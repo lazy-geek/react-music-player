@@ -16,19 +16,19 @@ export const Header = (props) => {
 	// 	[], // will be created only once initially
 	// );
     const search = (value)=>{
-        socket.emit("searchQuery", { searchQuery: value});
-        socket.on("found", (data) => {
-            console.log("data found");
-            console.log(data)
+        // socket.emit("searchQuery", { searchQuery: value});
+        // socket.on("found", (data) => {
+        //     console.log("data found");
+        //     console.log(data)
             // console.log(JSON.stringify(data));
             
-            props.searchSongByName(data);
-        });
+            props.searchSongByName(value);
+        // });
     };
     const socket = socketIOClient(ENDPOINT);
     useEffect(()=>{
-        socket.on("connect",()=>{
-            console.log("socket connected");
+        // socket.on("connect",()=>{
+        //     console.log("socket connected");
             // socket.on("found", (data) => {
             //     console.log("found");
             //     console.log(data)
@@ -49,7 +49,7 @@ export const Header = (props) => {
             // props.setSongList([song]);
             // console.log(result);
             //   });
-        });
+        // });
 
         
     },[]);
@@ -62,7 +62,7 @@ export const Header = (props) => {
             return;
         }
         // throttleSearch(e.target.value.toString());
-        search(e.target.value.toString());
+        search(e.target.value.trim().toString());
         // console.log(props.contract);
         // console.log(isFirstTime);
         // if(searchTxt.trim() == ''){
